@@ -161,6 +161,32 @@ app.post("/api/staff/login", async (req, res) => {
   }
 }); 
 
+
+
+
+/* 
+   -------------------------------------------------------------------------
+   PROJECT CRUD ROUTES
+   --------------------------------------------------------------------------
+    */
+
+
+// 1. CREATE
+app.post("/api/projects", async (req, res) => {
+  try {
+    const project = new Project(req.body);
+    const savedProject = await project.save();
+    res.status(201).json({
+      message: "Project created successfully",
+      project: savedProject,
+    });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ message: "Failed to create project", error: error.message });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
