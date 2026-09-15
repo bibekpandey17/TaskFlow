@@ -315,7 +315,7 @@ app.delete("/api/projects/:id", authenticate, async (req, res) => {
 
 // Connect to Database and start Server safely
 mongoose
-  .connect(process.env.MONGO_URI)
+    .connect(process.env.MONGODB_URL)
   .then(() => {
     console.log("MongoDB connected successfully");
     app.listen(PORT, () => {
