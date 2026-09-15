@@ -242,7 +242,7 @@ app.post("/api/projects", authenticate, async (req, res) => {
     res.status(201).json({
       message: "Project created successfully",
       project: savedProject,
-    });
+    }); 
   } catch (error) {
     res
       .status(400)
