@@ -10,10 +10,6 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-mongoose
-  .connect("mongodb://127.0.0.1:27017/taskflow")
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.error("MongoDB connection error:", err));
 
 /*
    --------------------------------------------------------------------------
@@ -170,7 +166,6 @@ app.post("/api/staff/login", async (req, res) => {
    --------------------------------------------------------------------------
     */
 
-
 // 1. CREATE
 app.post("/api/projects", async (req, res) => {
   try {
@@ -217,7 +212,51 @@ app.get("/api/projects/:id", async (req, res) => {
   }
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// 4. UPDATE
+app.put("/api/projects/:id", async (req, res) => {
+  try {
+    const updatedProject = await Project.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    res.status(200).json({
+      message: "Project updated successfully",
+      project: updatedProject,
+    });
+  } catch (error) {
+    res.status(400).json({ message: "Update failed", error: error.message });
+  }
 });
+
+// 5. DELETE
+app.delete("/api/projects/:id", async (req, res) => {
+  try {
+    const deletedProject = await Project.findByIdAndDelete(req.params.id);
+    if (!deletedProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Delete failed", error: error.message });
+  }
+});
+
+ 
+// Connect to Database and start Server safely
+mongoose
+  .connect("mongodb://127.0.0.1:27017/taskflow")
+  .then(() => {
+    console.log("MongoDB connected successfully");
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
