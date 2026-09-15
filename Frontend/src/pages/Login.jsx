@@ -55,10 +55,10 @@ export default function Login() {
                 navigate("/admin-dashboard");
             } else {
                 navigate("/employee-dashboard");
-            }
+            } 
 
         } catch (err) {
-            setError(err.message || "Something went wrong. Please check if the backend is running.");
+            setError(err.message || "Something went wrong. Please check if the backend is now running.");
         } finally {
             setLoading(false);
         }
