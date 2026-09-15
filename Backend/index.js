@@ -187,6 +187,36 @@ app.post("/api/projects", async (req, res) => {
   }
 });
 
+// 2. READ ALL
+app.get("/api/projects", async (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.staffId) {
+      filter.staffId = req.query.staffId;
+    }
+
+    const projects = await Project.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(projects);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch projects", error: error.message });
+  }
+});
+
+// 3. READ ONE
+app.get("/api/projects/:id", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
