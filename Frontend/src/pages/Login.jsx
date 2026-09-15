@@ -15,7 +15,7 @@ export default function Login() {
         setError("");
 
         if (!staffId.trim() || !password.trim()) {
-            setError("Please enter the both Staff ID and password");
+            setError("Please enter both Staff ID and password");
             return;
         }
 
