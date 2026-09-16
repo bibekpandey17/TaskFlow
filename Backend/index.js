@@ -379,7 +379,7 @@ app.get("/api/employees/:id", authenticate, async (req, res) => {
       return res.status(404).json({ message: "Employee not found" });
     }
     res.status(200).json(employee);
-  } catch (error) {a
+  } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 });

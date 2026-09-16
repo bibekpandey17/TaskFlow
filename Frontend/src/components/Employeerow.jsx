@@ -45,11 +45,11 @@ export default function EmployeeRow({ employee, onDeleteClick }) {
 
         {/* Edit */}
         <Link
-            to={`/admin-dashboard/employee-details/${employee.id}/edit`}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
-        >
-               Edit
-            </Link>
+    to={`/admin-dashboard/employee-details/${employee._id}/edit`}
+    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+>
+       Edit
+    </Link>
 
         {/* Delete */}
         <button
