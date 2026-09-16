@@ -1,42 +1,47 @@
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Users, ListTodo, AlertTriangle, TrendingUp } from "lucide-react";
-import { getEmployees } from "../utils/api";
+import { getEmployees, getProjects } from "../utils/api";
 
 const donutColors = ["#9333EA", "#C4B5FD", "#7C3AED", "#DDD6FE", "#5B21B6"];
 
 export default function AdminDashboard() {
   const [employees, setEmployees] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
-    async function loadEmployees() {
+    async function loadData() {
       try {
-        const data = await getEmployees();
-        setEmployees(data);
+        const [employeeData, projectData] = await Promise.all([
+          getEmployees(),
+          getProjects(),
+        ]);
+        setEmployees(employeeData);
+        setProjects(projectData);
       } catch (err) {
-        setLoadError(err.message || "Failed to load employees.");
+        setLoadError(err.message || "Failed to load dashboard data.");
       }
     }
 
-    loadEmployees();
+    loadData();
     setTasks(JSON.parse(localStorage.getItem("tasks")) || []);
   }, []);
 
   const today = new Date().toISOString().split("T")[0];
 
   const totalEmployees = employees.length;
-  const totalTasks = tasks.length;
+  const totalTasks = projects.length;
   const pendingCount = tasks.filter((t) => t.status === "pending").length;
   const inProgressCount = tasks.filter((t) => t.status === "in-progress").length;
   const completedCount = tasks.filter((t) => t.status === "completed").length;
   const overdueCount = tasks.filter((t) => t.dueDate && t.dueDate < today && t.status !== "completed").length;
-  const completionRate = totalTasks === 0 ? 0 : Math.round((completedCount / totalTasks) * 100);
+  const completionRate = tasks.length === 0 ? 0 : Math.round((completedCount / tasks.length) * 100);
 
   const kpis = [
     { label: "Total Employees", value: totalEmployees, icon: Users, bg: "#9333EA" },
-    { label: "Total Tasks", value: totalTasks, icon: ListTodo, bg: "#7C3AED" },
+    { label: "Total Projects", value: totalTasks, icon: ListTodo, bg: "#7C3AED" },
     { label: "Overdue Tasks", value: overdueCount, icon: AlertTriangle, bg: "#DC2626" },
     { label: "Completion Rate", value: `${completionRate}%`, icon: TrendingUp, bg: "#16A34A" },
   ];
@@ -84,7 +89,7 @@ export default function AdminDashboard() {
         {/* Task Status Tracker */}
         <div className="col-span-2 bg-white rounded-xl shadow-sm p-5">
           <h3 className="font-semibold text-slate-800 mb-4">Task Status</h3>
-          {totalTasks === 0 ? (
+          {tasks.length === 0 ? (
             <p className="text-sm text-slate-400">No tasks created yet.</p>
           ) : (
             <div className="space-y-4">
@@ -101,7 +106,7 @@ export default function AdminDashboard() {
                   <div className="w-full bg-slate-100 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full ${s.color}`}
-                      style={{ width: `${totalTasks === 0 ? 0 : (s.count / totalTasks) * 100}%` }}
+                      style={{ width: `${tasks.length === 0 ? 0 : (s.count / tasks.length) * 100}%` }}
                     />
                   </div>
                 </div>

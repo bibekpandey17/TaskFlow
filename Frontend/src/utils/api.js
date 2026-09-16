@@ -60,3 +60,8 @@ export async function updateEmployee(id, values) {
 export async function deleteEmployee(id) {
   return apiRequest(`/employees/${id}`, { method: "DELETE" });
 }
+
+export async function getProjects() {
+  const data = await apiRequest("/projects");
+  return data;
+}
