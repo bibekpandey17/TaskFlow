@@ -1,16 +1,26 @@
 import { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Users, ListTodo, AlertTriangle, TrendingUp } from "lucide-react";
-import { getEmployees } from "../utils/storage";
+import { getEmployees } from "../utils/api";
 
 const donutColors = ["#9333EA", "#C4B5FD", "#7C3AED", "#DDD6FE", "#5B21B6"];
 
 export default function AdminDashboard() {
   const [employees, setEmployees] = useState([]);
   const [tasks, setTasks] = useState([]);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
-    setEmployees(getEmployees());
+    async function loadEmployees() {
+      try {
+        const data = await getEmployees();
+        setEmployees(data);
+      } catch (err) {
+        setLoadError(err.message || "Failed to load employees.");
+      }
+    }
+
+    loadEmployees();
     setTasks(JSON.parse(localStorage.getItem("tasks")) || []);
   }, []);
 
@@ -45,6 +55,12 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-bold text-slate-800">Dashboard Overview</h2>
+
+      {loadError && (
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-4 py-3">
+          {loadError}
+        </div>
+      )}
 
       {/* KPI Cards */}
       <div className="grid grid-cols-4 gap-4">
