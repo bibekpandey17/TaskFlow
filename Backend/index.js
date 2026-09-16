@@ -9,6 +9,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const Staff = require("./models/login");
 const Project = require("./models/project");
+const Employee = require("./models/employeeDetails");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -308,6 +309,111 @@ app.delete("/api/projects/:id", authenticate, async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
     res.status(200).json({ message: "Project deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Delete failed" });
+  }
+});
+
+
+
+/*
+   -------------------------------------------------------------------------
+   Employee details CRUD ROUTES
+   --------------------------------------------------------------------------
+    */
+
+
+
+// 1. CREATE 
+app.post("/api/employees", authenticate, requireAdmin, async (req, res) => {
+  try {
+    const { name, email, phone, department, position, joinDate, status } = req.body;
+
+    if (!name || !email || !phone || !department || !position) {
+      return res.status(400).json({ message: "Please provide all required fields" });
+    }
+
+    const existingEmployee = await Employee.findOne({ email });
+    if (existingEmployee) {
+      return res.status(400).json({ message: "Employee with this email already exists" });
+    }
+
+    const employee = new Employee({
+      name,
+      email,
+      phone,
+      department,
+      position,
+      joinDate,
+      status,
+    });
+
+    const savedEmployee = await employee.save();
+    res.status(201).json({
+      message: "Employee created successfully",
+      employee: savedEmployee,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: "Failed to create employee",
+      error: error.message,
+    });
+  }
+});
+
+// 2. READ ALL 
+app.get("/api/employees", authenticate, async (req, res) => {
+  try {
+    const employees = await Employee.find({}).sort({ createdAt: -1 });
+    res.status(200).json(employees);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch employees" });
+  }
+});
+
+// 3. READ ONE 
+app.get("/api/employees/:id", authenticate, async (req, res) => {
+  try {
+    const employee = await Employee.findById(req.params.id);
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+    res.status(200).json(employee);
+  } catch (error) {a
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// 4. UPDATE
+app.put("/api/employees/:id", authenticate, requireAdmin, async (req, res) => {
+  try {
+    const updatedEmployee = await Employee.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedEmployee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.status(200).json({
+      message: "Employee updated successfully",
+      employee: updatedEmployee,
+    });
+  } catch (error) {
+    res.status(400).json({ message: "Update failed", error: error.message });
+  }
+});
+
+// 5. DELETE 
+app.delete("/api/employees/:id", authenticate, requireAdmin, async (req, res) => {
+  try {
+    const deletedEmployee = await Employee.findByIdAndDelete(req.params.id);
+    if (!deletedEmployee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+    res.status(200).json({ message: "Employee deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Delete failed" });
   }

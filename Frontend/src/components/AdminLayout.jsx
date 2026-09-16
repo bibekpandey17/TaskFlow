@@ -1,29 +1,15 @@
-
-import { Outlet, Link, useNavigate } from "react-router-dom";
-import "./AdminLayout.css";
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 export default function AdminLayout() {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    navigate("/");
-  };
-
   return (
-    <div className="admin-layout">
-      <aside className="admin-sidebar">
-        <h2 className="sidebar-logo">TaskFlow</h2>
-        <nav>
-          <Link to="/admin-dashboard">Dashboard</Link>
-          <Link to="/admin-dashboard/employees">Employees</Link>
-        </nav>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-      </aside>
-
-      <main className="admin-content">
-        <Outlet />
-      </main>
+    <div className="flex">
+      <Sidebar />
+      <div className="flex-1">
+        <main className="p-6 bg-slate-50 min-h-screen">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

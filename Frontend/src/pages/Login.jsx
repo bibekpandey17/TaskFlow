@@ -15,7 +15,7 @@ export default function Login() {
         setError("");
 
         if (!staffId.trim() || !password.trim()) {
-            setError("Please enter both Staff ID and password");
+            setError("Please Enter both Staff ID and Password");
             return;
         }
 
@@ -58,7 +58,7 @@ export default function Login() {
             } 
 
         } catch (err) {
-            setError(err.message || "Something went wrong. Please check if the backend is now running.");
+            setError(err.message || "Something went wrong. Please check it the backend is now running.");
         } finally {
             setLoading(false);
         }
