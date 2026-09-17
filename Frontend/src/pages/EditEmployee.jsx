@@ -11,6 +11,11 @@ export default function EditEmployee() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!id || id === "undefined") {
+      setError("Invalid or missing employee ID.");
+      return;
+    }
+
     getEmployeeById(id)
       .then(setEmployee)
       .catch((err) => setError(err.message));

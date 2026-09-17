@@ -29,11 +29,17 @@ export default function EmployeeRow({ employee, onDeleteClick }) {
         {employee.email}
       </td>
 
+      {/* Contact No. */}
+      <td className="py-3 px-4 text-sm text-slate-500">
+        {employee.phone || employee.contact || "-"}
+      </td>
+
       {/* Status */}
       <td className="py-3 px-4">
         <span
           className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-            statusStyles[employee.status] || "bg-slate-100 text-slate-600"
+            statusStyles[employee.status] ||
+            "bg-slate-100 text-slate-600"
           }`}
         >
           {employee.status}
@@ -41,21 +47,21 @@ export default function EmployeeRow({ employee, onDeleteClick }) {
       </td>
 
       {/* Actions */}
-      <td className="py-3 px-4 text-right space-x-3">
+      <td className="text-xs font-medium px-2.5 py-1 rounded-full">
 
         {/* Edit */}
         <Link
-    to={`/admin-dashboard/employee-details/${employee._id}/edit`}
-    className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
->
-       Edit
-    </Link>
+          to={`/admin-dashboard/employee-details/${employee.id}/edit`}
+          className="px-3 py-1.5 bg-purple-100 text-[#9333EA] hover:bg-purple-200 rounded-md text-xs font-medium"
+        >
+          Edit
+        </Link>
 
         {/* Delete */}
         <button
           type="button"
           onClick={() => onDeleteClick(employee)}
-          className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
+          className="px-3 py-1.5 bg-red-100 text-red-600 hover:bg-red-200 rounded-md text-xs font-medium"
         >
           Delete
         </button>

@@ -2,17 +2,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
-  Plus,
-  LogOut,
   ClipboardList,
+  LogOut,
+  ClipboardCheck,
 } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", icon: LayoutDashboard, path: "/admin-dashboard", end: true },
   { name: "Employee details", icon: Users, path: "/admin-dashboard/employee-details", end: true },
-
-  { name: "All Tasks", icon: ClipboardList, path: "/admin-dashboard/tasks", end: true },
-  { name: "Manage Staff", icon: Users, path: "/admin-dashboard/staff", end: true },
+  { name: "Projects", icon: ClipboardList, path: "/admin-dashboard/projects", end: true },
+  { name: "Manage Staff", icon: Users, path: "/admin-dashboard/manage-staff", end: true },
 ];
 
 const Sidebar = () => {
@@ -25,14 +24,18 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="w-64 h-screen bg-white border-r border-slate-200 flex flex-col justify-between p-4 font-sans text-slate-700 select-none shadow-sm">
+    <aside className="w-64 h-screen bg-white border-r border-slate-200 flex flex-col justify-between p-4 font-[Poppins] text-slate-700 select-none shadow-sm">
       <div>
+        {/* Branding — matches Login page */}
         <div className="flex items-center gap-3 px-3 py-4 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-[#9333EA] from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-indigo-200">
-            TF
+          <div className="w-9 h-9 rounded-xl bg-[#9333EA] flex items-center justify-center shadow-md shadow-purple-200">
+            <ClipboardCheck size={20} color="#ffffff" />
           </div>
           <div>
-            <h1 className="font-bold text-slate-800 text-lg leading-tight">TaskFlow</h1>
+            <h1 className="font-bold text-slate-800 text-lg leading-tight">
+              Task<span className="text-[#9333EA]">Flow</span>
+            </h1>
+            
           </div>
         </div>
 
@@ -47,15 +50,15 @@ const Sidebar = () => {
                 className={({ isActive }) =>
                   `w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "bg-indigo-50 text-indigo-600 shadow-sm"
-                      : "text-[#9333EA] hover:bg-slate-50 hover:text-slate-900"
+                      ? "bg-purple-50 text-[#9333EA] shadow-sm"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-5 h-5 ${isActive ? "text-indigo-600" : "text-[#9333EA]"}`} />
+                      <Icon className={`w-5 h-5 ${isActive ? "text-[#9333EA]" : "text-slate-400"}`} />
                       <span>{item.name}</span>
                     </div>
                     {isActive && <div className="w-1.5 h-1.5 rounded-full bg-[#9333EA]" />}
@@ -67,9 +70,9 @@ const Sidebar = () => {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-700 hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-rose-50 hover:text-rose-600 transition-all duration-200"
           >
-            <LogOut className="w-5 h-5 text-slate-500" />
+            <LogOut className="w-5 h-5 text-slate-400" />
             Logout
           </button>
         </nav>

@@ -1,4 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Login from "./pages/Login";
 
@@ -12,83 +17,102 @@ import EmployeeList from "./pages/EmployeeList";
 import AddEmployee from "./pages/AddEmployee";
 import EditEmployee from "./pages/EditEmployee";
 
+import ManageStaff from "./pages/Managestaff";
+import Projects from "./pages/Projects";
 
-import ManageStaff from "./pages/ManageStaff";
-
-import AllTasks from "./pages/AllTasks";
 
 
 function App() {
   return (
     <BrowserRouter>
+
       <Routes>
 
-        {/* ================= LOGIN ================= */}
+        {/*  LOGIN  */}
 
-        <Route path="/login" element={<Login />} />
-
-        {/* Redirect root to login */}
         <Route
-          path="/"
-          element={<Navigate to="/login" replace />}
+          path="/login"
+          element={<Login />}
         />
 
 
-        {/* ================= ADMIN DASHBOARD ================= */}
+        {/* ROOT */}
+
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
+        />
+
+
+        {/* ADMIN DASHBOARD  */}
 
         <Route
           path="/admin-dashboard"
           element={
             <ProtectedRoute>
               <AdminLayout />
-            </ProtectedRoute>
+            </ProtectedRoute> 
           }
         >
 
           {/* Dashboard */}
+
           <Route
             index
             element={<AdminDashboard />}
           />
 
+
           {/* Employee Details */}
+
           <Route
             path="employee-details"
             element={<EmployeeList />}
           />
 
+
           {/* Add Employee */}
+
           <Route
             path="employee-details/add"
             element={<AddEmployee />}
           />
 
+
           {/* Edit Employee */}
+
           <Route
             path="employee-details/:id/edit"
             element={<EditEmployee />}
           />
 
+
+          {/* Projects */}
+
+          <Route
+            path="projects"
+            element={<Projects />}
+          />
+
+
           
 
           {/* Manage Staff */}
+
           <Route
             path="manage-staff"
             element={<ManageStaff />}
           />
 
-          
-
-          {/* All Tasks */}
-          <Route
-            path="tasks"
-            element={<AllTasks />}
-          />
-
         </Route>
 
 
-        {/* ================= EMPLOYEE DASHBOARD ================= */}
+        {/*  EMPLOYEE DASHBOARD  */}
 
         <Route
           path="/employee-dashboard"
@@ -100,14 +124,20 @@ function App() {
         />
 
 
-        {/* ================= INVALID URL ================= */}
+        {/*  INVALID URL  */}
 
         <Route
           path="*"
-          element={<Navigate to="/login" replace />}
+          element={
+            <Navigate
+              to="/login"
+              replace
+            />
+          }
         />
 
       </Routes>
+
     </BrowserRouter>
   );
 }
