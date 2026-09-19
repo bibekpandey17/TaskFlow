@@ -109,7 +109,7 @@ Start the backend server:
 npm start
 ```
 
-The API will run on `http://localhost:5000`.
+The API will run on ` https://taskflow-v6xw.onrender.com`.
 
 ### 3. Frontend setup
 
@@ -119,7 +119,7 @@ npm install
 npm run dev
 ```
 
-The app will run on `https://task-flow-theta-bay.vercel.app/`. Vite is configured to proxy all `/api` requests to `http://localhost:5000`, so no CORS configuration is needed for local development beyond setting `CLIENT_URL` in the backend `.env`.
+The app will run on `https://task-flow-theta-bay.vercel.app/`. Vite is configured to proxy all `/api` requests to ` https://taskflow-v6xw.onrender.com`, so no CORS configuration is needed for local development beyond setting `CLIENT_URL` in the backend `.env`.
 
 ### 4. Log in
 

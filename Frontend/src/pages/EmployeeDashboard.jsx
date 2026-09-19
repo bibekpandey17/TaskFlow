@@ -3,7 +3,7 @@ import { ChevronDown, Pencil, Trash2, X } from "lucide-react";
 
 import EmployeeSidebar from "../components/EmployeeSidebar";
 
-const API_BASE = "http://localhost:5000/api/projects";
+const API_BASE = " https://taskflow-v6xw.onrender.com/api/projects";
 
 const statusStyles = {
   "Not Started":

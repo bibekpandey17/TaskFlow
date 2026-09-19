@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', // ⚠️ Change this to your backend port if it's different (e.g. 3000)
+        target: ' https://taskflow-v6xw.onrender.com', // ⚠️ Change this to your backend port if it's different (e.g. 3000)
         changeOrigin: true,
         secure: false,
       },
