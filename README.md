@@ -91,7 +91,7 @@ Create a `.env` file in `Backend/` based on `.env.example`:
 ```dotenv
 MONGODB_URL="your-mongodb-connection-string"
 JWT_SECRET="a-long-random-secret-string"
-CLIENT_URL="http://localhost:5173"
+CLIENT_URL="https://task-flow-theta-bay.vercel.app/"
 PORT=5000
 ```
 
@@ -119,11 +119,11 @@ npm install
 npm run dev
 ```
 
-The app will run on `http://localhost:5173`. Vite is configured to proxy all `/api` requests to `http://localhost:5000`, so no CORS configuration is needed for local development beyond setting `CLIENT_URL` in the backend `.env`.
+The app will run on `https://task-flow-theta-bay.vercel.app/`. Vite is configured to proxy all `/api` requests to `http://localhost:5000`, so no CORS configuration is needed for local development beyond setting `CLIENT_URL` in the backend `.env`.
 
 ### 4. Log in
 
-Open `http://localhost:5173/login` and sign in with the admin credentials created in step 2, or with staff credentials created afterward from the Manage Staff section of the admin dashboard.
+Open `https://task-flow-theta-bay.vercel.app//login` and sign in with the admin credentials created in step 2, or with staff credentials created afterward from the Manage Staff section of the admin dashboard.
 
 ## API Overview
 
