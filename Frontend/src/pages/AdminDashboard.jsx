@@ -17,6 +17,7 @@ import {
 
 const EMPLOYEES_API_URL = "/api/employees";
 const PROJECTS_API_URL = "/api/projects";
+const STAFF_API_URL = "/api/staff";
 
 function getAuthHeaders() {
   const token = localStorage.getItem("token");
@@ -35,6 +36,7 @@ const donutColors = [
 export default function AdminDashboard() {
   const [employees, setEmployees] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -46,12 +48,14 @@ export default function AdminDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [employeesRes, projectsRes] = await Promise.all([
+      const [employeesRes, projectsRes, staffRes] = await Promise.all([
         axios.get(EMPLOYEES_API_URL, { headers: getAuthHeaders() }),
         axios.get(PROJECTS_API_URL, { headers: getAuthHeaders() }),
+        axios.get(STAFF_API_URL, { headers: getAuthHeaders() }),
       ]);
       setEmployees(employeesRes.data);
       setProjects(projectsRes.data);
+      setStaffList(staffRes.data);
     } catch (err) {
       setError(
         err.response?.data?.message || "Failed to load dashboard data"
@@ -61,14 +65,27 @@ export default function AdminDashboard() {
     }
   }
 
+  // Map staffId -> staffName, e.g. "Ram123" -> "Ram"
+  const staffNameMap = {};
+  staffList.forEach((s) => {
+    staffNameMap[s.staffId] = s.staffName || s.staffId;
+  });
+
   const today = new Date().toISOString().split("T")[0];
+
+  function toDateInputValue(date) {
+    if (!date) return "";
+    const d = new Date(date);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toISOString().split("T")[0];
+  }
 
   const totalEmployees = employees.length;
 
   const totalProjects = projects.length;
 
-  const pendingCount = projects.filter(
-    (project) => project.status === "Pending"
+  const notStartedCount = projects.filter(
+    (project) => project.status === "Not Started"
   ).length;
 
   const inProgressCount = projects.filter(
@@ -79,12 +96,14 @@ export default function AdminDashboard() {
     (project) => project.status === "Completed"
   ).length;
 
-  const overdueCount = projects.filter(
-    (project) =>
-      project.dueDate &&
-      project.dueDate < today &&
-      project.status !== "Completed"
+  const onHoldCount = projects.filter(
+    (project) => project.status === "On Hold"
   ).length;
+
+  const overdueCount = projects.filter((project) => {
+    const end = toDateInputValue(project.endDate);
+    return end && end < today && project.status !== "Completed";
+  }).length;
 
   const completionRate =
     totalProjects === 0
@@ -121,17 +140,17 @@ export default function AdminDashboard() {
   const workloadMap = {};
 
   projects.forEach((project) => {
-    const employeeName = (
-      project.assignedTo ||
-      project.doneBy ||
+    const rawName = (
+      staffNameMap[project.staffId] ||
+      project.staffId ||
       "Unassigned"
     ).trim();
 
     const existingName = Object.keys(workloadMap).find(
-      (name) => name.toLowerCase() === employeeName.toLowerCase()
+      (name) => name.toLowerCase() === rawName.toLowerCase()
     );
 
-    const finalName = existingName || employeeName;
+    const finalName = existingName || rawName;
 
     workloadMap[finalName] = (workloadMap[finalName] || 0) + 1;
   });
@@ -150,7 +169,7 @@ export default function AdminDashboard() {
           </h2>
         </div>
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 py-12 text-center text-sm text-slate-500">
-          Loading dashboard......
+          Loading dashboard.....
         </div>
       </div>
     );
@@ -208,14 +227,14 @@ export default function AdminDashboard() {
 
           {totalProjects === 0 ? (
             <p className="text-sm text-slate-400">
-              No projects yet — click "+ Add Project" to create one.
+              No projects yet — click "+ Add Project" to create one.   
             </p>
           ) : (
             <div className="space-y-4">
               {[
                 {
-                  label: "Pending",
-                  count: pendingCount,
+                  label: "Not Started", 
+                  count: notStartedCount, 
                   color: "bg-[#9333EA]",
                 },
                 {
@@ -227,6 +246,11 @@ export default function AdminDashboard() {
                   label: "Completed",
                   count: completedCount,
                   color: "bg-emerald-500",
+                },
+                {
+                  label: "On Hold",
+                  count: onHoldCount,
+                  color: "bg-amber-500",
                 },
               ].map((status) => (
                 <div key={status.label}>
