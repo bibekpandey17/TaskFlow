@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import EmployeeRow from './EmployeeRow';
+import EmployeeRow from './Employeerow';
 
 const columns = [
   { key: 'name', label: 'Name' },
