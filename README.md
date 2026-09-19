@@ -45,24 +45,26 @@ System credentials are securely provisioned by administrators, allowing employee
 
 ## Project Structure
 
+```
 TaskFlow/
 ├── Backend/
-│ ├── models/
-│ │ ├── login.js # Staff/Admin schema
-│ │ ├── project.js # Project schema
-│ │ └── employeeDetails.js # Employee profile schema
-│ ├── connectDb.js
-│ ├── createFirstAdmin.js # Script to seed the first admin account
-│ ├── index.js # Express app & all API routes
-│ └── .env.example
+│   ├── models/
+│   │   ├── login.js              # Staff/Admin schema
+│   │   ├── project.js            # Project schema
+│   │   └── employeeDetails.js    # Employee profile schema
+│   ├── connectDb.js
+│   ├── createFirstAdmin.js       # Script to seed the first admin account
+│   ├── index.js                  # Express app & all API routes
+│   └── .env.example
+│
 └── Frontend/
-├── src/
-│ ├── components/ # Sidebar, layouts, shared UI
-│ ├── pages/ # Login, dashboards, employee & project pages
-│ ├── utils/ # API helpers
-│ └── App.jsx # Route definitions
-└── vite.config.js
-
+    ├── src/
+    │   ├── components/           # Sidebar, layouts, shared UI
+    │   ├── pages/                # Login, dashboards, employee & project pages
+    │   ├── utils/                # API helpers
+    │   └── App.jsx                # Route definitions
+    └── vite.config.js
+```
 
 ## Getting Started
 
