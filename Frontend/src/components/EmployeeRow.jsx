@@ -13,8 +13,8 @@ export default function EmployeeRow({ employee, onDeleteClick }) {
       {/* Name */}
       <td className="py-3 px-4 text-sm font-medium text-slate-900">
         {employee.name}
-      </td>
-
+       </td>
+ 
       {/* Department */}
       <td className="py-3 px-4 text-sm text-slate-500">
         {employee.department}
