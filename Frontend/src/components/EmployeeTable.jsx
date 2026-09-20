@@ -70,7 +70,7 @@ export default function EmployeeTable({ employees, onDeleteClick }) {
           </thead>
           <tbody>
             {filtered.map((emp) => (
-              <EmployeeRow key={emp.id} employee={emp} onDeleteClick={onDeleteClick} />
+              <EmployeeRow key={emp.id || emp._id} employee={emp} onDeleteClick={onDeleteClick} />
             ))}
           </tbody>
         </table>
