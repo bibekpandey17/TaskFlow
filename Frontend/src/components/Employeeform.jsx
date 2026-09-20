@@ -268,7 +268,7 @@ export default function EmployeeForm({
 
         <button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-2.5 rounded-md transition-colors"
+          className="bg-[#9333EA] hover:bg-[#a855f7] text-white font-medium px-5 py-2.5 rounded-md transition-colors"
         >
           {submitLabel}
         </button>
