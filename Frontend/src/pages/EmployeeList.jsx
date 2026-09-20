@@ -42,7 +42,7 @@ export default function EmployeeList() {
 
         <Link
           to="/admin-dashboard/employee-details/add"
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2.5 rounded-md transition-colors"
+          className="bg-[#9333EA] hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2.5 rounded-md transition-colors"
         >
           Add Employee
         </Link>
