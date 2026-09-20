@@ -51,7 +51,7 @@ export default function EmployeeRow({ employee, onDeleteClick }) {
 
         {/* Edit */}
         <Link
-         to={`/admin-dashboard/employee-details/${employee.id || employee._id}/edit`}
+           to={`/admin-dashboard/employee-details/${employee.id || employee._id}/edit`}
           className="px-3 py-1.5 bg-purple-100 text-[#9333EA] hover:bg-purple-200 rounded-md text-xs font-medium"
         >
           Edit
