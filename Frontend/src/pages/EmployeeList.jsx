@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import EmployeeTable from "../components/Employeetable";
+import EmployeeTable from "../components/EmployeeTable";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import { getEmployees, deleteEmployee } from "../utils/api";
 
