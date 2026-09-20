@@ -4,8 +4,9 @@ const statusStyles = {
   Active: "bg-emerald-50 text-emerald-600",
   "On Leave": "bg-amber-50 text-amber-600",
 };
-console.log("employee object:", employee);
+
 export default function EmployeeRow({ employee, onDeleteClick }) {
+    console.log("employee object:", employee); 
   return (
     <tr className="border-b border-slate-100 last:border-0">
 
