@@ -6,6 +6,7 @@ const statusStyles = {
 };
 
 export default function EmployeeRow({ employee, onDeleteClick }) {
+    console.log("employee object:", employee); 
   return (
     <tr className="border-b border-slate-100 last:border-0">
 
@@ -49,9 +50,9 @@ export default function EmployeeRow({ employee, onDeleteClick }) {
       {/* Actions */}
       <td className="text-xs font-medium px-2.5 py-1 rounded-full">
 
-        {/* Edit */}
+       {/* Edit */}
         <Link
-          to={`/admin-dashboard/employee-details/${employee.id}/edit`}
+          to={`/admin-dashboard/employee-details/${employee._id || employee.id || employee.employeeId || employee.uid || ''}/edit`}
           className="px-3 py-1.5 bg-purple-100 text-[#9333EA] hover:bg-purple-200 rounded-md text-xs font-medium"
         >
           Edit
