@@ -9,10 +9,13 @@ export default function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [pendingDelete, setPendingDelete] = useState(null);
 
-  async function loadEmployees() {
+ async function loadEmployees() {
     try {
       const data = await getEmployees();
-      setEmployees(data);
+      const employeeList = Array.isArray(data) 
+        ? data 
+        : data?.employees || data?.data || [];
+      setEmployees(employeeList);
     } catch (err) {
       console.error(err.message);
     }
