@@ -6,7 +6,6 @@ const statusStyles = {
 };
 
 export default function EmployeeRow({ employee, onDeleteClick }) {
-    console.log("employee object:", employee); 
   return (
     <tr className="border-b border-slate-100 last:border-0">
 
