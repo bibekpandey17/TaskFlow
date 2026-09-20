@@ -28,6 +28,8 @@ export default function ManageStaff() {
     role: "",
     location: "",
     password: "",
+    isAdmin: false,
+    isActive: true,
   });
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function ManageStaff() {
   }
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
 
     if (name === "staffName") {
       setFormData((prev) => ({
@@ -92,7 +94,7 @@ export default function ManageStaff() {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   }
 
@@ -113,6 +115,8 @@ export default function ManageStaff() {
       role: "",
       location: "",
       password: "",
+      isAdmin: false,
+      isActive: true,
     });
 
     setEditingId(null);
@@ -131,6 +135,8 @@ export default function ManageStaff() {
       role: "",
       location: "",
       password: "",
+      isAdmin: false,
+      isActive: true,
     });
 
     setShowForm(true);
@@ -149,6 +155,8 @@ export default function ManageStaff() {
           phone: formData.phone,
           role: formData.role,
           location: formData.location,
+          isAdmin: formData.isAdmin,
+          isActive: formData.isActive,
         };
 
         // Only send password if the admin typed a new one
@@ -172,6 +180,8 @@ export default function ManageStaff() {
           phone: formData.phone,
           role: formData.role,
           location: formData.location,
+          isAdmin: formData.isAdmin,
+          isActive: formData.isActive,
         };
 
         await axios.post(API_URL, payload, {
@@ -201,6 +211,8 @@ export default function ManageStaff() {
       role: account.role || "",
       location: account.location || "",
       password: "",
+      isAdmin: !!account.isAdmin,
+      isActive: account.isActive !== false,
     });
 
     setEditingId(account._id);
@@ -235,6 +247,46 @@ export default function ManageStaff() {
 
   function cancelDelete() {
     setDeleteId(null);
+  }
+
+  async function toggleActive(account) {
+    setLoading(true);
+    setError("");
+    try {
+      await axios.put(
+        `${API_URL}/${account._id}`,
+        { isActive: !account.isActive },
+        { headers: getAuthHeaders() }
+      );
+      await fetchStaff();
+      showMessage(
+        account.isActive ? "Account deactivated." : "Account activated."
+      );
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to update status");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function toggleAdmin(account) {
+    setLoading(true);
+    setError("");
+    try {
+      await axios.put(
+        `${API_URL}/${account._id}`,
+        { isAdmin: !account.isAdmin },
+        { headers: getAuthHeaders() }
+      );
+      await fetchStaff();
+      showMessage(
+        account.isAdmin ? "Admin access removed." : "Admin access granted."
+      );
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to update role");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -445,6 +497,30 @@ export default function ManageStaff() {
                   className="w-full border border-slate-300 rounded-md px-3 py-2.5 text-sm outline-none focus:border-[#9333EA] focus:ring-1 focus:ring-[#9333EA]"
                 />
               </div>
+
+              <div className="flex items-center gap-6 md:col-span-2">
+                <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    name="isAdmin"
+                    checked={formData.isAdmin}
+                    onChange={handleChange}
+                    className="w-4 h-4 rounded border-slate-300 text-[#9333EA] focus:ring-[#9333EA]"
+                  />
+                  Admin Access
+                </label>
+
+                <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <input
+                    type="checkbox"
+                    name="isActive"
+                    checked={formData.isActive}
+                    onChange={handleChange}
+                    className="w-4 h-4 rounded border-slate-300 text-[#9333EA] focus:ring-[#9333EA]"
+                  />
+                  Active
+                </label>
+              </div>
             </div>
 
             <div className="flex justify-end gap-3 mt-6">
@@ -506,6 +582,12 @@ export default function ManageStaff() {
                     Location
                   </th>
                   <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500">
+                    Role
+                  </th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500">
+                    Status
+                  </th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-slate-500">
                     Actions
                   </th>
                 </tr>
@@ -515,7 +597,7 @@ export default function ManageStaff() {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan="7"
+                      colSpan="9"
                       className="text-center py-8 text-sm text-slate-500"
                     >
                       Loading.....
@@ -524,7 +606,7 @@ export default function ManageStaff() {
                 ) : accounts.length === 0 ? (
                   <tr>
                     <td
-                      colSpan="7"
+                      colSpan="9"
                       className="text-center py-8 text-sm text-slate-500"
                     >
                       No staff accounts created yet.
@@ -560,6 +642,34 @@ export default function ManageStaff() {
 
                       <td className="px-6 py-4 text-sm text-slate-600">
                         {account.location}
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => toggleAdmin(account)}
+                          disabled={loading}
+                          className={`px-2.5 py-1 rounded-md text-xs font-medium ${
+                            account.isAdmin
+                              ? "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+                              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                          }`}
+                        >
+                          {account.isAdmin ? "Admin" : "Staff"}
+                        </button>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => toggleActive(account)}
+                          disabled={loading}
+                          className={`px-2.5 py-1 rounded-md text-xs font-medium ${
+                            account.isActive
+                              ? "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                              : "bg-amber-50 text-amber-600 hover:bg-amber-100"
+                          }`}
+                        >
+                          {account.isActive ? "Active" : "Inactive"}
+                        </button>
                       </td>
 
                       <td className="px-6 py-4">
