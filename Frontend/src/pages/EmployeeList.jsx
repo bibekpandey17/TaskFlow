@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import EmployeeTable from "../components/EmployeeTable";
 import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
@@ -8,12 +8,16 @@ import { getEmployees, deleteEmployee } from "../utils/api";
 export default function EmployeeList() {
   const [employees, setEmployees] = useState([]);
   const [pendingDelete, setPendingDelete] = useState(null);
+  const [message, setMessage] = useState("");
 
- async function loadEmployees() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  async function loadEmployees() {
     try {
       const data = await getEmployees();
-      const employeeList = Array.isArray(data) 
-        ? data 
+      const employeeList = Array.isArray(data)
+        ? data
         : data?.employees || data?.data || [];
       setEmployees(employeeList);
     } catch (err) {
@@ -25,11 +29,34 @@ export default function EmployeeList() {
     loadEmployees();
   }, []);
 
+  // Pick up success message passed from Add/Edit pages via navigate(state)
+  useEffect(() => {
+    if (location.state?.message) {
+      setMessage(location.state.message);
+
+      // Clear the state so refreshing the page doesn't re-show the message
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
+
+  // Auto-hide the message after a few seconds
+  useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(() => setMessage(""), 3000);
+    return () => clearTimeout(timer);
+  }, [message]);
+
   async function handleConfirmDelete() {
     if (!pendingDelete) return;
-    await deleteEmployee(pendingDelete._id);
-    await loadEmployees();
-    setPendingDelete(null);
+    try {
+      await deleteEmployee(pendingDelete._id);
+      await loadEmployees();
+      setMessage("Employee deleted successfully!");
+    } catch (err) {
+      setMessage(err.message || "Failed to delete employee.");
+    } finally {
+      setPendingDelete(null);
+    }
   }
 
   return (
@@ -47,6 +74,12 @@ export default function EmployeeList() {
           Add Employee
         </Link>
       </div>
+
+      {message && (
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-md px-4 py-3">
+          {message}
+        </div>
+      )}
 
       <EmployeeTable employees={employees} onDeleteClick={setPendingDelete} />
 

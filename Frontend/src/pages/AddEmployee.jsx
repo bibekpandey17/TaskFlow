@@ -11,7 +11,9 @@ export default function AddEmployee() {
     setError("");
     try {
       await createEmployee(values);
-      navigate("/admin-dashboard/employee-details");
+      navigate("/admin-dashboard/employee-details", {
+        state: { message: "Employee added successfully!" },
+      });
     } catch (err) {
       setError(err.message || "Failed to add employee.");
     }
